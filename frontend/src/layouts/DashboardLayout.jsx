@@ -68,7 +68,7 @@ const DashboardLayout = ({ children }) => {
         </div>
 
         {/* User profile section */}
-        <div className="p-4 border-t border-slate-800/50 space-y-4">
+        <div className="p-4 border-t border-slate-800/50">
           <div className="flex items-center justify-between bg-slate-950/40 p-3 rounded-xl border border-slate-800/40">
             <div className="flex items-center gap-3 min-w-0">
               {user?.avatar ? (
@@ -96,11 +96,6 @@ const DashboardLayout = ({ children }) => {
               <LogOut size={16} />
             </button>
           </div>
-          
-          <div className="text-center text-[9px] text-slate-500 font-medium leading-relaxed border-t border-slate-800/30 pt-3">
-            <div>© 2026 AI Code Reviewer & PR gatekeeper All rights reserved.</div>
-            <div className="text-indigo-400 font-bold uppercase tracking-wider mt-0.5">DESIGNED BY BHUKYA KAIRAM</div>
-          </div>
         </div>
       </aside>
 
@@ -123,14 +118,20 @@ const DashboardLayout = ({ children }) => {
         </header>
 
         {/* Page Content Router View */}
-        <div className="flex-1 overflow-y-auto p-8 bg-slate-950/40 relative">
+        <div className="flex-1 overflow-y-auto p-8 bg-slate-950/40 relative flex flex-col justify-between">
           {/* Subtle glowing ambient spots */}
           <div className="absolute top-20 left-1/4 w-96 h-96 bg-indigo-500/5 rounded-full blur-[100px] pointer-events-none animate-pulse-slow"></div>
           <div className="absolute bottom-20 right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-[100px] pointer-events-none animate-pulse-slow"></div>
           
-          <div className="relative z-10 max-w-7xl mx-auto h-full">
+          <div className="relative z-10 max-w-7xl w-full mx-auto flex-1">
             {children}
           </div>
+
+          {/* Centered Middle-Bottom Footer */}
+          <footer className="relative z-10 text-center text-[10px] text-slate-500 font-medium leading-relaxed mt-12 border-t border-slate-800/30 pt-6 max-w-7xl w-full mx-auto">
+            <div>© 2026 AI Code Reviewer & PR gatekeeper All rights reserved.</div>
+            <div className="text-indigo-400 font-bold uppercase tracking-wider mt-1">DESIGNED BY BHUKYA KAIRAM</div>
+          </footer>
         </div>
       </main>
     </div>

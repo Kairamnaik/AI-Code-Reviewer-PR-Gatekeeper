@@ -1,0 +1,186 @@
+import dotenv from 'dotenv';
+import { connectDB } from './src/config/db.js';
+import { initQueue, registerWorker } from './src/services/queue/queue.js';
+import { processReviewJob } from './src/services/workers/reviewWorker.js';
+import { handleGithubWebhook } from './src/controllers/WebhookController.js';
+import { User } from './src/models/User.js';
+import { Repository } from './src/models/Repository.js';
+import { PullRequest } from './src/models/PullRequest.js';
+import { Review } from './src/models/Review.js';
+import { AuditLog } from './src/models/AuditLog.js';
+import { Notification } from './src/models/Notification.js';
+
+dotenv.config();
+
+// Ensure mock environment config if not already defined
+process.env.GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || 'mock_client_id';
+process.env.GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'mock_gemini_key';
+
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+const runIntegrationTest = async () => {
+  console.log('🧪 Starting AI Reviewer Integration Test...');
+
+  try {
+    // 1. Initialize databases and queue connections
+    await connectDB();
+    await initQueue();
+    registerWorker(processReviewJob);
+
+    // 2. Clear previous test records
+    console.log('🧹 Clearing previous test database entries...');
+    await User.deleteMany({ githubId: '583231' });
+    await Repository.deleteMany({ repoId: '101' });
+    const oldRepo = await Repository.findOne({ repoId: '101' });
+    if (oldRepo) {
+      await PullRequest.deleteMany({ repositoryId: oldRepo._id });
+      const prs = await PullRequest.find({ repositoryId: oldRepo._id });
+      const prIds = prs.map(p => p._id);
+      await Review.deleteMany({ prId: { $in: prIds } });
+    }
+    await AuditLog.deleteMany({});
+    await Review.deleteMany({});
+    await Notification.deleteMany({});
+
+    // 3. Setup Sandbox User & Repo
+    console.log('👤 Seeding mock user and repository records...');
+    const user = await User.create({
+      githubId: '583231',
+      username: 'sandbox-developer',
+      email: 'sandbox@example.com',
+      avatar: 'https://avatars.githubusercontent.com/u/583231?v=4',
+      accessToken: 'mock_github_access_token'
+    });
+
+    const repo = await Repository.create({
+      userId: '583231',
+      repoId: '101',
+      repoName: 'e-commerce-backend',
+      owner: 'mock-user',
+      visibility: 'public',
+      defaultBranch: 'main',
+      webhookId: 'mock_webhook_id_101',
+      webhookStatus: 'active',
+      securityScore: 100
+    });
+
+    // 4. Simulate Incoming GitHub Webhook Payload
+    console.log('📥 Simulating incoming pull request opened webhook payload...');
+
+    // Mock Express Request
+    const mockReq = {
+      headers: {
+        'x-github-event': 'pull_request'
+      },
+      body: {
+        action: 'opened',
+        pull_request: {
+          number: 42,
+          title: 'Implement jwt login route and db config',
+          state: 'open',
+          user: {
+            login: 'sandbox-developer'
+          },
+          head: {
+            ref: 'feature/auth',
+            sha: 'mock_commit_sha_12345'
+          }
+        },
+        repository: {
+          id: 101,
+          name: 'e-commerce-backend',
+          owner: {
+            login: 'mock-user'
+          }
+        }
+      }
+    };
+
+    // Mock Express Response
+    let responseStatus = null;
+    let responseJson = null;
+    const mockRes = {
+      status: (code) => {
+        responseStatus = code;
+        return mockRes;
+      },
+      json: (data) => {
+        responseJson = data;
+        return mockRes;
+      }
+    };
+
+    // Invoke Webhook Controller directly
+    await handleGithubWebhook(mockReq, mockRes);
+
+    console.log(`[Webhook Response] Status: ${responseStatus}, Data:`, responseJson);
+
+    if (responseStatus !== 200) {
+      throw new Error(`Webhook controller responded with status ${responseStatus}`);
+    }
+
+    // 5. Wait for the background queue processor to consume and complete the review job
+    console.log('⏳ Waiting for background review worker to complete (dynamic polling for audit logs)...');
+    const maxRetries = 60;
+    for (let i = 0; i < maxRetries; i++) {
+      await delay(1000);
+      const auditLog = await AuditLog.findOne({ action: 'AI_REVIEW' });
+      console.log(`[Test Polling] Loop #${i}, found auditLog:`, auditLog);
+      if (auditLog) {
+        break;
+      }
+    }
+
+    // 6. Inspect outcomes in the database
+    console.log('🔍 Validating review results in database...');
+
+    // A. Check PR record
+    const prRecord = await PullRequest.findOne({ repositoryId: repo._id, prNumber: 42 });
+    if (!prRecord) {
+      throw new Error('PullRequest record was not created in the database.');
+    }
+    console.log('   ✅ PullRequest record verified.');
+
+    // B. Check AI Review findings
+    const findings = await Review.find({ prId: prRecord._id });
+    if (findings.length === 0) {
+      throw new Error('No Review findings were generated by the AI Review Engine.');
+    }
+    console.log(`   ✅ Review findings generated successfully. Count: ${findings.length}`);
+    findings.forEach(f => {
+      console.log(`      - Found ${f.severity} issue: "${f.issue}" on ${f.file}:${f.lineNumber}`);
+    });
+
+    // C. Check Repository security score update
+    const updatedRepo = await Repository.findById(repo._id);
+    console.log(`   ✅ Repository Security Score updated to: ${updatedRepo.securityScore}`);
+    if (updatedRepo.securityScore === 100) {
+      throw new Error('Repository security score was not recalculated (remained at 100).');
+    }
+
+    // D. Check Notifications
+    const notifs = await Notification.find();
+    if (notifs.length === 0) {
+      throw new Error('No dashboard notification alert was created.');
+    }
+    console.log(`   ✅ Notification alerts logged successfully. Count: ${notifs.length}`);
+    console.log(`      - Title: "${notifs[0].title}" | Message: "${notifs[0].message}"`);
+
+    // E. Check Audit logs
+    const auditLogs = await AuditLog.find();
+    if (auditLogs.length === 0) {
+      throw new Error('No audit log entries were recorded.');
+    }
+    console.log(`   ✅ Audit log trail recorded successfully. Count: ${auditLogs.length}`);
+
+    console.log('\n🎉 ====================================================');
+    console.log('🎉 INTEGRATION TEST COMPLETED SUCCESSFULLY! ALL SYSTEMS OK!');
+    console.log('🎉 ====================================================\n');
+    process.exit(0);
+  } catch (err) {
+    console.error('\n❌ INTEGRATION TEST FAILED:', err.message);
+    process.exit(1);
+  }
+};
+
+runIntegrationTest();

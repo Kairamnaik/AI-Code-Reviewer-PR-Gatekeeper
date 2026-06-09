@@ -144,7 +144,7 @@ export const createReviewComment = async (accessToken, owner, repo, prNumber, co
   }
 
   const octokit = new Octokit({ auth: accessToken });
-  
+
   try {
     // If no commitId is supplied, retrieve the latest commit from the PR
     let commitSha = commitId;

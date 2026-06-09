@@ -1,10 +1,11 @@
-# Automated AI Code Reviewer & PR Gatekeeper
+# Automated AI Code Reviewer & PR Gatekeeper.
 
 An enterprise-grade, developer-first tool built on an **Event-Driven Architecture** that integrates directly with GitHub repositories to automatically review Pull Requests using Artificial Intelligence before code is merged. 
 
 This application functions as a robust **PR Gatekeeper**—scanning incoming changes for security vulnerabilities, performance bottlenecks, hardcoded secrets, and code smells, and posting inline comments directly back to the pull request.
 
 ---
+
 
 ## 🚀 Key Features & Architectural Flow
 

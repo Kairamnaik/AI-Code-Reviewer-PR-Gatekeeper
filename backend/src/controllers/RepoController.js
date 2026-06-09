@@ -48,8 +48,17 @@ export const linkRepository = async (req, res) => {
       ? `https://smee.io/mock-webhook-reviewer-dev-unique` // Placeholder or local helper
       : `${protocol}://${host}/api/webhooks/github`;
     
-    // Register Webhook on GitHub
-    const webhook = await createWebhook(req.user.accessToken, owner, name, webhookUrl);
+    // Register Webhook on GitHub (gracefully fall back if user lacks admin hooks permission)
+    let webhookId = null;
+    let webhookStatus = 'inactive';
+    try {
+      const webhook = await createWebhook(req.user.accessToken, owner, name, webhookUrl);
+      webhookId = webhook.id;
+      webhookStatus = webhook.status;
+    } catch (webhookErr) {
+      console.warn(`[RepoController] GitHub webhook registration failed for ${owner}/${name}:`, webhookErr.message);
+      webhookStatus = 'failed';
+    }
 
     // Save Repository
     const newRepo = await Repository.create({
@@ -59,8 +68,8 @@ export const linkRepository = async (req, res) => {
       owner,
       visibility: visibility || 'public',
       defaultBranch: defaultBranch || 'main',
-      webhookId: webhook.id,
-      webhookStatus: webhook.status
+      webhookId,
+      webhookStatus
     });
 
     // Audit Log
@@ -86,8 +95,14 @@ export const unlinkRepository = async (req, res) => {
       return res.status(404).json({ error: 'Connected repository record not found.' });
     }
 
-    // Delete webhook on GitHub
-    await deleteWebhook(req.user.accessToken, repo.owner, repo.repoName, repo.webhookId);
+    // Delete webhook on GitHub (gracefully ignore failures if hook was already deleted or token lacks permissions)
+    try {
+      if (repo.webhookId) {
+        await deleteWebhook(req.user.accessToken, repo.owner, repo.repoName, repo.webhookId);
+      }
+    } catch (webhookErr) {
+      console.warn(`[RepoController] GitHub webhook deletion failed for ${repo.owner}/${repo.repoName}:`, webhookErr.message);
+    }
 
     // Remove from DB
     await Repository.deleteOne({ _id: id });

@@ -68,7 +68,7 @@ const DashboardLayout = ({ children }) => {
         </div>
 
         {/* User profile section */}
-        <div className="p-4 border-t border-slate-800/50">
+        <div className="p-4 border-t border-slate-800/50 space-y-4">
           <div className="flex items-center justify-between bg-slate-950/40 p-3 rounded-xl border border-slate-800/40">
             <div className="flex items-center gap-3 min-w-0">
               {user?.avatar ? (
@@ -96,6 +96,11 @@ const DashboardLayout = ({ children }) => {
               <LogOut size={16} />
             </button>
           </div>
+          
+          <div className="text-center text-[9px] text-slate-500 font-medium leading-relaxed border-t border-slate-800/30 pt-3">
+            <div>© 2026 AI Code Reviewer & PR gatekeeper All rights reserved.</div>
+            <div className="text-indigo-400 font-bold uppercase tracking-wider mt-0.5">DESIGNED BY BHUKYA KAIRAM</div>
+          </div>
         </div>
       </aside>
 
@@ -114,10 +119,6 @@ const DashboardLayout = ({ children }) => {
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="text-right hidden sm:block">
-              <span className="text-xs text-slate-500 block">Workspace</span>
-              <span className="text-xs font-semibold text-indigo-400">bhukyakairam/portfolio</span>
-            </div>
           </div>
         </header>
 

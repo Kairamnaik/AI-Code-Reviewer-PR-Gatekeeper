@@ -63,6 +63,26 @@ export const createWebhook = async (accessToken, owner, repo, webhookUrl) => {
   const octokit = new Octokit({ auth: accessToken });
   const secret = process.env.GITHUB_WEBHOOK_SECRET || 'fallback_secret';
 
+  try {
+    // Check if matching webhook already exists on the repo
+    const { data: existingWebhooks } = await octokit.rest.repos.listWebhooks({
+      owner,
+      repo,
+      per_page: 100
+    });
+
+    const existingMatch = existingWebhooks.find(hook => hook.config && hook.config.url === webhookUrl);
+    if (existingMatch) {
+      console.log(`[Octokit] Reusing existing webhook ${existingMatch.id} for ${owner}/${repo}`);
+      return {
+        id: existingMatch.id.toString(),
+        status: existingMatch.active ? 'active' : 'inactive'
+      };
+    }
+  } catch (listErr) {
+    console.warn(`[Octokit] Failed to list existing webhooks for ${owner}/${repo}:`, listErr.message);
+  }
+
   const { data } = await octokit.rest.repos.createWebhook({
     owner,
     repo,

@@ -40,13 +40,14 @@ export const linkRepository = async (req, res) => {
       return res.status(400).json({ error: 'Repository is already connected.' });
     }
 
-    // Determine payload webhook url (use dynamic host or ngrok)
+    // Determine payload webhook url (use custom WEBHOOK_URL env var, dynamic host or ngrok)
     const host = req.get('host');
     const protocol = req.protocol;
-    // For local dev, webhookUrl can be configured in settings or dynamic, fallback to mock domain
-    const webhookUrl = host.includes('localhost')
-      ? `https://smee.io/mock-webhook-reviewer-dev-unique` // Placeholder or local helper
-      : `${protocol}://${host}/api/webhooks/github`;
+    const webhookUrl = process.env.WEBHOOK_URL 
+      ? process.env.WEBHOOK_URL 
+      : (host.includes('localhost')
+          ? `https://smee.io/mock-webhook-reviewer-dev-unique` // Placeholder or local helper
+          : `${protocol}://${host}/api/webhooks/github`);
     
     // Register Webhook on GitHub (gracefully fall back if user lacks admin hooks permission)
     let webhookId = null;

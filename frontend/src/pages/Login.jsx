@@ -1,4 +1,5 @@
-import { Activity, ShieldAlert, Sparkles, Zap } from 'lucide-react';
+import { ShieldAlert, Sparkles, Zap } from 'lucide-react';
+import logoSvg from '../assets/vite.svg';
 
 const GithubIcon = (props) => (
   <svg 
@@ -26,80 +27,80 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen w-screen bg-slate-950 flex flex-col items-center justify-center relative overflow-hidden font-sans text-slate-100">
+    <div className="min-h-screen w-screen bg-slate-50 flex flex-col items-center justify-center relative overflow-hidden font-sans text-slate-800">
       {/* Decorative background glows */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none animate-pulse-slow"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-violet-600/10 rounded-full blur-[120px] pointer-events-none animate-pulse-slow"></div>
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-600/5 rounded-full blur-[120px] pointer-events-none animate-pulse-slow"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-violet-600/5 rounded-full blur-[120px] pointer-events-none animate-pulse-slow"></div>
 
       <div className="relative z-10 w-full max-w-md p-8">
         {/* App Logo/Branding */}
         <div className="flex flex-col items-center mb-8">
-          <div className="bg-indigo-600/20 p-4 rounded-2xl border border-indigo-500/30 text-indigo-400 mb-4 shadow-lg shadow-indigo-500/5">
-            <Activity size={36} />
+          <div className="bg-indigo-600/10 p-4 rounded-2xl border border-indigo-500/20 text-indigo-600 mb-4 shadow-lg shadow-indigo-500/5">
+            <img src={logoSvg} alt="PR Gatekeeper Logo" className="w-12 h-12" />
           </div>
           <h1 className="text-3xl font-extrabold tracking-wider text-gradient-purple uppercase font-sans">
             PR GATEKEEPER
           </h1>
-          <p className="text-slate-400 text-sm mt-1.5 font-medium tracking-wide">
+          <p className="text-slate-550 text-sm mt-1.5 font-medium tracking-wide">
             Production-Grade AI Code Reviewer
           </p>
         </div>
 
         {/* Glassmorphism Auth Card */}
-        <div className="glass-panel p-8 rounded-3xl glow-indigo relative border-slate-800/80">
+        <div className="glass-panel p-8 rounded-3xl glow-indigo relative border-slate-200">
           <div className="mb-6 text-center">
-            <h2 className="text-xl font-bold text-slate-200">Connect Account</h2>
-            <p className="text-xs text-slate-400 mt-1">
+            <h2 className="text-xl font-bold text-slate-800">Connect Account</h2>
+            <p className="text-xs text-slate-500 mt-1">
               Authorize via GitHub to start scanning repositories
             </p>
           </div>
 
           <button
             onClick={handleGithubLogin}
-            className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3.5 px-4 rounded-xl flex items-center justify-center gap-3 transition-all duration-300 shadow-lg shadow-indigo-600/20 hover:scale-[1.01] hover:shadow-indigo-600/30 active:scale-[0.99]"
+            className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3.5 px-4 rounded-xl flex items-center justify-center gap-3 transition-all duration-300 shadow-lg shadow-indigo-600/20 hover:scale-[1.01] hover:shadow-indigo-600/30 active:scale-[0.99] cursor-pointer"
           >
             <GithubIcon />
             <span>Continue with GitHub</span>
           </button>
 
-          <div className="border-t border-slate-800/60 my-6"></div>
+          <div className="border-t border-slate-200 my-6"></div>
 
           {/* Feature list */}
           <div className="space-y-4">
             <div className="flex gap-3 items-start text-left">
-              <div className="bg-indigo-600/15 p-1.5 rounded-lg text-indigo-400 border border-indigo-500/10 mt-0.5">
+              <div className="bg-indigo-600/10 p-1.5 rounded-lg text-indigo-600 border border-indigo-500/15 mt-0.5">
                 <ShieldAlert size={14} />
               </div>
               <div>
-                <h4 className="text-xs font-semibold text-slate-200">Security Guardrails</h4>
-                <p className="text-[11px] text-slate-400">Scan for SQLi, XSS, exposed secrets, and logic vulnerability vectors.</p>
+                <h4 className="text-xs font-semibold text-slate-800">Security Guardrails</h4>
+                <p className="text-[11px] text-slate-500">Scan for SQLi, XSS, exposed secrets, and logic vulnerability vectors.</p>
               </div>
             </div>
 
             <div className="flex gap-3 items-start text-left">
-              <div className="bg-emerald-600/15 p-1.5 rounded-lg text-emerald-400 border border-emerald-500/10 mt-0.5">
+              <div className="bg-emerald-600/10 p-1.5 rounded-lg text-emerald-600 border border-emerald-500/15 mt-0.5">
                 <Zap size={14} />
               </div>
               <div>
-                <h4 className="text-xs font-semibold text-slate-200">Webhook Automation</h4>
-                <p className="text-[11px] text-slate-400">Installs event hooks that automatically trigger reviews on open pull requests.</p>
+                <h4 className="text-xs font-semibold text-slate-800">Webhook Automation</h4>
+                <p className="text-[11px] text-slate-500">Installs event hooks that automatically trigger reviews on open pull requests.</p>
               </div>
             </div>
 
             <div className="flex gap-3 items-start text-left">
-              <div className="bg-amber-600/15 p-1.5 rounded-lg text-amber-400 border border-amber-500/10 mt-0.5">
+              <div className="bg-amber-600/10 p-1.5 rounded-lg text-amber-600 border border-amber-500/15 mt-0.5">
                 <Sparkles size={14} />
               </div>
               <div>
-                <h4 className="text-xs font-semibold text-slate-200">Gemini Review Engine</h4>
-                <p className="text-[11px] text-slate-400">Publishes inline reviewer feedback and copyable fixes directly on line commits.</p>
+                <h4 className="text-xs font-semibold text-slate-800">Gemini Review Engine</h4>
+                <p className="text-[11px] text-slate-500">Publishes inline reviewer feedback and copyable fixes directly on line commits.</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <p className="text-center text-[10px] text-slate-500 mt-8">
+        <p className="text-center text-[10px] text-slate-400 mt-8">
           By signing in you agree to allow PR Gatekeeper to register webhooks and write review comments to your linked repos.
         </p>
       </div>

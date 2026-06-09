@@ -6,16 +6,16 @@
 
 @layer base {
   body {
-    @apply bg-slate-950 text-slate-100 font-sans antialiased selection:bg-indigo-500/30 selection:text-indigo-200;
+    @apply bg-slate-50 text-slate-800 font-sans antialiased selection:bg-indigo-100 selection:text-indigo-900;
   }
 }
 
 /* Premium Custom Design Tokens */
 .glass-panel {
-  background: rgba(15, 23, 42, 0.45);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(51, 65, 85, 0.5);
+  border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 .glass-panel-hover {
@@ -23,9 +23,9 @@
 }
 
 .glass-panel-hover:hover {
-  background: rgba(15, 23, 42, 0.6);
+  background: rgba(255, 255, 255, 0.9);
   border-color: rgba(99, 102, 241, 0.4);
-  box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.1);
   transform: translateY(-2px);
 }
 
@@ -55,23 +55,23 @@
   box-shadow: 0 0 40px -5px rgba(16, 185, 129, 0.15);
 }
 
-/* Custom Scrollbar for Dark Code Views */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #070a13;
+  background: #f1f5f9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #cbd5e1;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #94a3b8;
 }
 
 /* Animations */

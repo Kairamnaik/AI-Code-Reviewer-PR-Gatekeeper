@@ -104,7 +104,7 @@ const Repositories = () => {
       {/* Search Bar header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="relative w-full sm:w-80">
-          <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+          <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
             <Search size={16} />
           </span>
           <input
@@ -112,10 +112,10 @@ const Repositories = () => {
             placeholder="Search repositories..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-slate-900/60 border border-slate-800/80 rounded-xl text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500/60 focus:ring-1 focus:ring-indigo-500/60"
+            className="w-full pl-10 pr-4 py-2.5 bg-white/80 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-450 text-sm focus:outline-none focus:border-indigo-500/60 focus:ring-1 focus:ring-indigo-500/60"
           />
         </div>
-        <span className="text-xs font-semibold text-slate-500">
+        <span className="text-xs font-semibold text-slate-400">
           Showing {filteredRepos.length} of {repos.length} repositories
         </span>
       </div>
@@ -129,7 +129,7 @@ const Repositories = () => {
               className={`glass-panel p-6 rounded-2xl flex flex-col justify-between h-56 transition-all duration-300 relative overflow-hidden ${
                 repo.linked 
                   ? 'border-indigo-500/30 shadow-md shadow-indigo-500/5 glow-indigo' 
-                  : 'border-slate-800/80 hover:border-slate-700/60'
+                  : 'border-slate-200 hover:border-slate-300'
               }`}
             >
               {/* Card background effect */}
@@ -144,7 +144,7 @@ const Repositories = () => {
                     <span className="text-slate-400 mt-0.5 flex-shrink-0">
                       <GitFork size={16} />
                     </span>
-                    <span className="font-bold text-slate-100 truncate text-base hover:text-indigo-400">
+                    <span className="font-bold text-slate-800 truncate text-base hover:text-indigo-600">
                       {repo.name}
                     </span>
                   </div>
@@ -152,8 +152,8 @@ const Repositories = () => {
                   {/* Public / Private Badge */}
                   <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 border ${
                     repo.visibility === 'private' 
-                      ? 'bg-purple-950/20 text-purple-400 border-purple-800/20' 
-                      : 'bg-indigo-950/20 text-indigo-400 border-indigo-800/20'
+                      ? 'bg-purple-50 text-purple-600 border-purple-200' 
+                      : 'bg-indigo-50 text-indigo-600 border-indigo-200'
                   }`}>
                     {repo.visibility === 'private' ? <Lock size={10} /> : <Globe size={10} />}
                     {repo.visibility}
@@ -161,32 +161,32 @@ const Repositories = () => {
                 </div>
 
                 {/* Owner and details */}
-                <span className="block text-xs text-slate-400 font-semibold mt-1">
+                <span className="block text-xs text-slate-500 font-semibold mt-1">
                   Owner: {repo.owner}
                 </span>
 
                 {/* Details list when connected */}
                 {repo.linked && (
-                  <div className="mt-4 space-y-2 border-t border-slate-800/40 pt-3 text-left">
+                  <div className="mt-4 space-y-2 border-t border-slate-200/50 pt-3 text-left">
                     <div className="flex justify-between items-center text-xs">
-                      <span className="text-slate-500 font-medium flex items-center gap-1.5">
-                        <Activity size={12} className="text-slate-500" />
+                      <span className="text-slate-400 font-medium flex items-center gap-1.5">
+                        <Activity size={12} className="text-slate-400" />
                         Webhook Status
                       </span>
                       <span className={`font-semibold capitalize ${
-                        repo.webhookStatus === 'active' ? 'text-emerald-400' : 'text-rose-400'
+                        repo.webhookStatus === 'active' ? 'text-emerald-600' : 'text-rose-600'
                       }`}>
                         {repo.webhookStatus}
                       </span>
                     </div>
 
                     <div className="flex justify-between items-center text-xs">
-                      <span className="text-slate-500 font-medium flex items-center gap-1.5">
-                        <Shield size={12} className="text-slate-500" />
+                      <span className="text-slate-400 font-medium flex items-center gap-1.5">
+                        <Shield size={12} className="text-slate-400" />
                         Security Score
                       </span>
                       <span className={`font-extrabold ${
-                        repo.securityScore >= 90 ? 'text-emerald-400' : repo.securityScore >= 70 ? 'text-amber-400' : 'text-rose-500'
+                        repo.securityScore >= 90 ? 'text-emerald-600' : repo.securityScore >= 70 ? 'text-amber-600' : 'text-rose-600'
                       }`}>
                         {repo.securityScore} / 100
                       </span>
@@ -201,7 +201,7 @@ const Repositories = () => {
                   <button
                     disabled={actionLoading[repo.id]}
                     onClick={() => handleUnlink(repo.dbId, repo.id)}
-                    className="w-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 font-semibold py-2 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-all active:scale-[0.99]"
+                    className="w-full bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-semibold py-2 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-all active:scale-[0.99] cursor-pointer"
                   >
                     {actionLoading[repo.id] ? (
                       <Loader className="animate-spin" size={14} />
@@ -214,7 +214,7 @@ const Repositories = () => {
                   <button
                     disabled={actionLoading[repo.id]}
                     onClick={() => handleLink(repo)}
-                    className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md shadow-indigo-600/10 active:scale-[0.99]"
+                    className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md shadow-indigo-600/10 active:scale-[0.99] cursor-pointer"
                   >
                     {actionLoading[repo.id] ? (
                       <Loader className="animate-spin" size={14} />
@@ -228,8 +228,8 @@ const Repositories = () => {
             </div>
           ))
         ) : (
-          <div className="col-span-full text-center py-20 bg-slate-900/10 rounded-2xl border border-slate-800/40 text-slate-500">
-            <GitFork size={48} className="mx-auto text-slate-700 mb-3" />
+          <div className="col-span-full text-center py-20 bg-slate-100/50 rounded-2xl border border-slate-200 text-slate-400">
+            <GitFork size={48} className="mx-auto text-slate-300 mb-3" />
             <p className="font-semibold text-sm">No repositories found matching your search</p>
           </div>
         )}

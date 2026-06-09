@@ -8,6 +8,7 @@ import { processReviewJob } from './services/workers/reviewWorker.js';
 import apiRouter from './routes/api.js';
 
 const app = express();
+app.set('trust proxy', true);
 const PORT = process.env.PORT || 5001;
 
 // Enable CORS

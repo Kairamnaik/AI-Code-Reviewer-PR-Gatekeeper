@@ -22,7 +22,7 @@ const Login = () => {
     // Redirect browser directly to backend login endpoint
     const backendUrl = import.meta.env.VITE_API_URL 
       ? import.meta.env.VITE_API_URL.replace('/api', '') 
-      : 'https://automated-ai-code-reviewer-pr-gatekeeper.onrender.com';
+      : 'http://localhost:5001';
     window.location.href = `${backendUrl}/api/auth/github`;
   };
 

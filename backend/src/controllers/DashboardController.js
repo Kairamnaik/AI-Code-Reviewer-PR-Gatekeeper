@@ -112,7 +112,7 @@ export const getSecurityScoreDetails = async (req, res) => {
       // average PR scores
       let totalPrPenalties = 0;
       for (const pr of prs) {
-        const prReviews = reviews.filter(r => r.prId === pr._id);
+        const prReviews = reviews.filter(r => r.prId?.toString() === pr._id?.toString());
         let penalties = 0;
         prReviews.forEach(r => {
           if (r.severity === 'Critical') penalties += 30;

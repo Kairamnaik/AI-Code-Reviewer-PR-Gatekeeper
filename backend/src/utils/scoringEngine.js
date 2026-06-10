@@ -50,7 +50,7 @@ export const updateRepositoryScore = async (repositoryDbId) => {
     // Option A: Average of all PR scores
     const prScores = [];
     for (const prId of prIds) {
-      const prReviews = reviews.filter(r => r.prId === prId);
+      const prReviews = reviews.filter(r => r.prId?.toString() === prId?.toString());
       const score = calculateScore(prReviews);
       prScores.push(score);
     }

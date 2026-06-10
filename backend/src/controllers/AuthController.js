@@ -13,7 +13,7 @@ export const redirectToGithub = (req, res) => {
     return res.redirect(`/api/auth/github/callback?code=mock_oauth_code`);
   }
 
-  const redirectUri = `${req.protocol}://${req.get('host')}/api/auth/github/callback`;
+  const redirectUri = process.env.GITHUB_CALLBACK_URL || `${req.protocol}://${req.get('host')}/api/auth/github/callback`;
   const githubUrl = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirectUri}&scope=repo,user`;
   res.redirect(githubUrl);
 };

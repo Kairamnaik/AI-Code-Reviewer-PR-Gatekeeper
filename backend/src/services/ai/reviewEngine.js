@@ -170,9 +170,17 @@ Original Git Patch Context:
 ${patch}
 `;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const jsonText = response.text();
+    const generatePromise = (async () => {
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      return response.text();
+    })();
+
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Gemini API call timed out after 10 seconds')), 10000)
+    );
+
+    const jsonText = await Promise.race([generatePromise, timeoutPromise]);
 
     try {
       const parsed = JSON.parse(jsonText);

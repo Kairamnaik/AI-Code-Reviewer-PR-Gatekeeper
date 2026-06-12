@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'https://automated-ai-code-reviewer-pr-gatekeeper.onrender.com/api'
+  baseURL: import.meta.env.VITE_API_URL || 'https://ai-code-reviewer-pr-gatekeeper.onrender.com/api'
 });
 
 // Auto-inject JWT token into Authorization header

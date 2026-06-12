@@ -18,7 +18,7 @@ This application serves as a robust **PR Gatekeeper**—scanning incoming code c
 [![MongoDB](https://img.shields.io/badge/Database-MongoDB%20Atlas-brightgreen?style=for-the-badge&logo=mongodb)](https://www.mongodb.com)
 [![GitHub API](https://img.shields.io/badge/Integration-Octokit%20SDK-black?style=for-the-badge&logo=github)](https://github.com)
 
----
+----
 
 ## 🏗️ System Architecture & Workflow
 

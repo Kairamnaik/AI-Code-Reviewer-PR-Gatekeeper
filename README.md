@@ -184,6 +184,32 @@ node test-review.js
 
 ---
 
+## 🚀 Production Deployment Setup
+
+### 1. Render (Backend)
+Deploy the `backend` folder as a Web Service on Render and set the following environment variables:
+- `PORT`: `5001`
+- `JWT_SECRET`: `your_jwt_signing_key`
+- `FRONTEND_URL`: `https://your-frontend-domain.vercel.app` (your deployed Vercel domain)
+- `MONGODB_URI`: `your_mongodb_atlas_connection_string`
+- `REDIS_URL`: `your_redis_connection_url`
+- `GITHUB_CLIENT_ID`: `your_github_oauth_client_id`
+- `GITHUB_CLIENT_SECRET`: `your_github_oauth_client_secret`
+- `GITHUB_CALLBACK_URL`: `https://your-backend-domain.onrender.com/api/auth/github/callback`
+- `GITHUB_WEBHOOK_SECRET`: `your_github_webhook_signing_secret`
+- `GEMINI_API_KEY`: `your_google_gemini_api_key`
+
+### 2. Vercel (Frontend)
+Deploy the `frontend` folder to Vercel and set the following environment variable:
+- `VITE_API_URL`: `https://your-backend-domain.onrender.com/api`
+
+### 3. GitHub OAuth Settings
+Ensure your GitHub Developer settings for the OAuth Application has:
+- **Homepage URL**: `https://your-frontend-domain.vercel.app`
+- **Authorization callback URL**: `https://your-backend-domain.onrender.com/api/auth/github/callback`
+
+---
+
 <p align="center">
   <b>© 2026 AI Code Reviewer & PR gatekeeper All rights reserved.</b><br>
   <i>DESIGNED BY BHUKYA KAIRAM</i>
